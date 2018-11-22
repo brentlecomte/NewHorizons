@@ -1,22 +1,29 @@
 class Sattelite {
-  constructor() {
-    this.mesh = new THREE.Object3D();
+  constructor(scene) {
+    this.loader = new THREE.STLLoader();
+    this.mesh = {};
+    this.material = new THREE.MeshPhongMaterial({
+      color: 0xaaaaaa,
+      specular: 0x111111,
+      shininess: 200
+    });
+  }
 
-    const loader = new THREE.STLLoader();
+  loadGeometry() {
+    return new Promise((resolve, reject) => {
+      this.loader.load("./assets/New_Horizons/body.stl", geometry => {
+        this.mesh = new THREE.Mesh(geometry, this.material);
 
-    loader.load("./assets/New_Horizons/body_l.stl", geometry => {
-      console.log("geomterty", geometry);
-      const material = new THREE.MeshPhongMaterial({
-        color: 0xff5533,
-        specular: 0x111111,
-        shininess: 200
+        this.mesh.position.set(1, -0.5, 1);
+        this.mesh.rotation.set(0, Math.PI / 2 - 80, 0);
+        this.mesh.scale.set(0.25, 0.25, 0.25);
+
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
+
+        // alert();
+        resolve(geometry);
       });
-
-      const antenna = new THREE.Mesh(geometry, material);
-      console.log("antenna", antenna);
-      antenna.castShadow = true;
-      antenna.receiveShadow = true;
-      this.mesh.add(geometry);
     });
   }
 }

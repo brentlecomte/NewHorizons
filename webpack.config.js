@@ -19,6 +19,7 @@ const PATHS = {
 const commonConfig = merge([
   {
     entry: [
+      path.join(PATHS.src, "assets/New_Horizons/body.stl"),
       path.join(PATHS.src, "css/style.css"),
       path.join(PATHS.src, "js/script.js")
     ],
