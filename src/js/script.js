@@ -2,14 +2,16 @@
   let container, stats;
 
   var loader = new THREE.OBJLoader();
+  let hemisphereLight, shadowLight;
 
-  let camera, cameraTarget, scene, renderer;
+  let camera, cameraTarget, scene, renderer, mesh;
   container = document.createElement("div");
   document.body.appendChild(container);
 
   const init = () => {
-    createCamera();
     createScene();
+    createCamera();
+    createLights();
 
     // load a resource
     loader.load(
@@ -21,6 +23,17 @@
         object.position.y = -5;
         object.position.x = -4;
 
+        // var mat = new THREE.MeshPhongMaterial({
+        //   color: "#FFFFFF",
+        //   transparent: true,
+        //   opacity: 0.6,
+        //   shading: THREE.FlatShading
+        // });
+
+        // mesh = new THREE.Mesh(object, mat);
+
+        // scene.add(mesh);
+
         scene.add(object);
       }
     );
@@ -28,6 +41,37 @@
     container.appendChild(renderer.domElement);
 
     window.addEventListener("resize", onWindowResize, false);
+  };
+
+  const createLights = () => {
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
+    console.log(hemisphereLight);
+
+    shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
+
+    // Set the direction of the light
+    shadowLight.position.set(3, 0.15, 3);
+
+    // Allow shadow casting
+    shadowLight.castShadow = true;
+
+    // define the visible area of the projected shadow
+    shadowLight.shadow.camera.left = -400;
+    shadowLight.shadow.camera.right = 400;
+    shadowLight.shadow.camera.top = 400;
+    shadowLight.shadow.camera.bottom = -400;
+    shadowLight.shadow.camera.near = 1;
+    shadowLight.shadow.camera.far = 1000;
+
+    // define the resolution of the shadow; the higher the better,
+    // but also the more expensive and less performant
+    shadowLight.shadow.mapSize.width = 2048;
+    shadowLight.shadow.mapSize.height = 2048;
+
+    // to activate the lights, just add them to the scene
+    console.log(hemisphereLight);
+    scene.add(hemisphereLight);
+    scene.add(shadowLight);
   };
 
   const createScene = () => {
@@ -50,28 +94,6 @@
     camera.position.set(3, 0.15, 3);
 
     cameraTarget = new THREE.Vector3(0, -0.25, 0);
-  };
-
-  const addShadowedLight = (x, y, z, color, intensity) => {
-    var directionalLight = new THREE.DirectionalLight(color, intensity);
-    directionalLight.position.set(x, y, z);
-    scene.add(directionalLight);
-
-    directionalLight.castShadow = true;
-
-    var d = 1;
-    directionalLight.shadow.camera.left = -d;
-    directionalLight.shadow.camera.right = d;
-    directionalLight.shadow.camera.top = d;
-    directionalLight.shadow.camera.bottom = -d;
-
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 4;
-
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-
-    directionalLight.shadow.bias = -0.002;
   };
 
   const onWindowResize = () => {
