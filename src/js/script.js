@@ -1,5 +1,3 @@
-import Sattelite from "./classes/Sattelite.js";
-
 {
   let container, stats;
 
@@ -10,7 +8,7 @@ import Sattelite from "./classes/Sattelite.js";
   const init = () => {
     createCamera();
     createScene();
-    createSattelite();
+    // createSattelite();
 
     scene.add(new THREE.HemisphereLight(0x443333, 0x111122));
     addShadowedLight(1, 1, 1, 0xffffff, 1.35);
@@ -48,13 +46,13 @@ import Sattelite from "./classes/Sattelite.js";
     cameraTarget = new THREE.Vector3(0, -0.25, 0);
   };
 
-  const createSattelite = () => {
-    const sattelite = new Sattelite();
-    sattelite.loadGeometry().then(geometry => {
-      scene.add(sattelite.mesh);
-    });
-    console.log(sattelite);
-  };
+  // const createSattelite = () => {
+  //   const sattelite = new Sattelite();
+  //   sattelite.loadGeometry().then(geometry => {
+  //     scene.add(sattelite.mesh);
+  //   });
+  //   console.log(sattelite);
+  // };
 
   const addShadowedLight = (x, y, z, color, intensity) => {
     var directionalLight = new THREE.DirectionalLight(color, intensity);
