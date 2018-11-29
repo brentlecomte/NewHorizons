@@ -1,6 +1,8 @@
 {
   let container, stats;
 
+  var loader = new THREE.OBJLoader();
+
   let camera, cameraTarget, scene, renderer;
   container = document.createElement("div");
   document.body.appendChild(container);
@@ -8,11 +10,20 @@
   const init = () => {
     createCamera();
     createScene();
-    // createSattelite();
 
-    scene.add(new THREE.HemisphereLight(0x443333, 0x111122));
-    addShadowedLight(1, 1, 1, 0xffffff, 1.35);
-    addShadowedLight(0.5, 1, -1, 0xffaa00, 1);
+    // load a resource
+    loader.load(
+      // resource URL
+      "./assets/New_Horizons/satelite.obj",
+      // called when resource is loaded
+      object => {
+        object.position.z = -6;
+        object.position.y = -5;
+        object.position.x = -4;
+
+        scene.add(object);
+      }
+    );
 
     container.appendChild(renderer.domElement);
 
@@ -27,11 +38,6 @@
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    renderer.gammaInput = true;
-    renderer.gammaOutput = true;
-
-    renderer.shadowMap.enabled = true;
   };
 
   const createCamera = () => {
@@ -45,14 +51,6 @@
 
     cameraTarget = new THREE.Vector3(0, -0.25, 0);
   };
-
-  // const createSattelite = () => {
-  //   const sattelite = new Sattelite();
-  //   sattelite.loadGeometry().then(geometry => {
-  //     scene.add(sattelite.mesh);
-  //   });
-  //   console.log(sattelite);
-  // };
 
   const addShadowedLight = (x, y, z, color, intensity) => {
     var directionalLight = new THREE.DirectionalLight(color, intensity);
