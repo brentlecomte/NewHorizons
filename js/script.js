@@ -1,61 +1,72 @@
+import Satelite from "./classes/Satelite.js";
+// import * as posenet from "@tensorflow-models/posenet";
+
 {
   let container, stats;
-
-  var loader = new THREE.OBJLoader();
   let hemisphereLight, shadowLight;
+  let camera, cameraTarget, scene, renderer, mesh, satelite;
 
-  let camera, cameraTarget, scene, renderer, mesh;
+  const video = document.querySelector(".video");
+  video.width = 600;
+  video.height = 600;
+  let posePoints;
+
   container = document.createElement("div");
   document.body.appendChild(container);
 
   const init = () => {
+    addCamera();
     createScene();
+    createSatelite();
     createCamera();
     createLights();
-
-    // load a resource
-    loader.load(
-      // resource URL
-      "./assets/New_Horizons/satelite.obj",
-      // called when resource is loaded
-      object => {
-        object.position.z = -6;
-        object.position.y = -5;
-        object.position.x = -4;
-
-        // var mat = new THREE.MeshPhongMaterial({
-        //   color: "#FFFFFF",
-        //   transparent: true,
-        //   opacity: 0.6,
-        //   shading: THREE.FlatShading
-        // });
-
-        // mesh = new THREE.Mesh(object, mat);
-
-        // scene.add(mesh);
-
-        scene.add(object);
-      }
-    );
+    getPosenet();
 
     container.appendChild(renderer.domElement);
 
     window.addEventListener("resize", onWindowResize, false);
   };
 
+  const addCamera = () => {
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(stream => {
+          video.srcObject = stream;
+        })
+        .catch(err0r => {
+          console.log("Something went wrong!");
+        });
+    }
+  };
+
+  const getPosenet = async () => {
+    const net = await posenet.load();
+    const pose = await net.estimateSinglePose(video, 0.5, true, 16);
+
+    posePoints = pose;
+    requestAnimationFrame(getPosenet);
+  };
+
+  const createSatelite = () => {
+    satelite = new Satelite();
+
+    satelite.mesh.position.z = -8;
+    satelite.mesh.position.y = -5;
+    satelite.mesh.position.x = -6;
+
+    scene.add(satelite.mesh);
+  };
+
   const createLights = () => {
     hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
-    console.log(hemisphereLight);
 
     shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
 
-    // Set the direction of the light
     shadowLight.position.set(3, 0.15, 3);
 
-    // Allow shadow casting
     shadowLight.castShadow = true;
 
-    // define the visible area of the projected shadow
     shadowLight.shadow.camera.left = -400;
     shadowLight.shadow.camera.right = 400;
     shadowLight.shadow.camera.top = 400;
@@ -63,13 +74,9 @@
     shadowLight.shadow.camera.near = 1;
     shadowLight.shadow.camera.far = 1000;
 
-    // define the resolution of the shadow; the higher the better,
-    // but also the more expensive and less performant
     shadowLight.shadow.mapSize.width = 2048;
     shadowLight.shadow.mapSize.height = 2048;
 
-    // to activate the lights, just add them to the scene
-    console.log(hemisphereLight);
     scene.add(hemisphereLight);
     scene.add(shadowLight);
   };
@@ -77,7 +84,7 @@
   const createScene = () => {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x72645b);
-    scene.fog = new THREE.Fog(0x72645b, 2, 15);
+    scene.de;
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -89,7 +96,7 @@
       35,
       window.innerWidth / window.innerHeight,
       1,
-      15
+      100
     );
     camera.position.set(3, 0.15, 3);
 
