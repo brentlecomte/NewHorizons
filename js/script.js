@@ -24,11 +24,14 @@ import Satelite from "./classes/Satelite.js";
   };
 
   const threeInit = () => {
-    addCamera();
+    //create elements
     createScene();
-    createSatelite();
     createCamera();
     createLights();
+
+    //add elements
+    addCamera();
+    addSatelite();
 
     loop();
   };
@@ -40,6 +43,7 @@ import Satelite from "./classes/Satelite.js";
     const pose = await net.estimateSinglePose(video, 0.5, true, 16);
 
     posePoints = pose;
+
     requestAnimationFrame(getPosenet);
   };
 
@@ -58,20 +62,21 @@ import Satelite from "./classes/Satelite.js";
     }
   };
 
-  const createSatelite = () => {
+  const addSatelite = () => {
     satelite = new Satelite();
 
+    console.log(satelite);
+
     satelite.mesh.position.z = -8;
-    satelite.mesh.position.y = -5;
-    satelite.mesh.position.x = -7;
+    satelite.mesh.position.y = -2;
 
     scene.add(satelite.mesh);
   };
 
   const createLights = () => {
-    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
+    hemisphereLight = new THREE.HemisphereLight(0x000000, 0x4662f8, 0.9);
 
-    shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    shadowLight = new THREE.DirectionalLight(0xffffff, 0.7);
 
     shadowLight.position.set(3, 0.15, 3);
 
@@ -86,6 +91,7 @@ import Satelite from "./classes/Satelite.js";
 
     shadowLight.shadow.mapSize.width = 2048;
     shadowLight.shadow.mapSize.height = 2048;
+    hemisphereLight.position.set(0, -10, 0);
 
     scene.add(hemisphereLight);
     scene.add(shadowLight);
@@ -107,9 +113,8 @@ import Satelite from "./classes/Satelite.js";
       1,
       100
     );
-    camera.position.set(3, 0.15, 3);
 
-    cameraTarget = new THREE.Vector3(0, -0.25, 0);
+    camera.position.z = 5;
   };
 
   const onWindowResize = () => {
@@ -126,9 +131,8 @@ import Satelite from "./classes/Satelite.js";
   };
 
   const render = () => {
-    var timer = Date.now() * 0.0005;
-
-    camera.lookAt(cameraTarget);
+    satelite.mesh.rotation.x += 0.001;
+    satelite.mesh.rotation.y += 0.005;
 
     renderer.render(scene, camera);
   };
