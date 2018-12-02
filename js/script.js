@@ -15,17 +15,35 @@ import Satelite from "./classes/Satelite.js";
   document.body.appendChild(container);
 
   const init = () => {
-    addCamera();
-    createScene();
-    createSatelite();
-    createCamera();
-    createLights();
+    threeInit();
     getPosenet();
 
     container.appendChild(renderer.domElement);
 
     window.addEventListener("resize", onWindowResize, false);
   };
+
+  const threeInit = () => {
+    addCamera();
+    createScene();
+    createSatelite();
+    createCamera();
+    createLights();
+
+    loop();
+  };
+
+  //POSENET
+
+  const getPosenet = async () => {
+    const net = await posenet.load();
+    const pose = await net.estimateSinglePose(video, 0.5, true, 16);
+
+    posePoints = pose;
+    requestAnimationFrame(getPosenet);
+  };
+
+  //THREE.JS
 
   const addCamera = () => {
     if (navigator.mediaDevices.getUserMedia) {
@@ -40,20 +58,12 @@ import Satelite from "./classes/Satelite.js";
     }
   };
 
-  const getPosenet = async () => {
-    const net = await posenet.load();
-    const pose = await net.estimateSinglePose(video, 0.5, true, 16);
-
-    posePoints = pose;
-    requestAnimationFrame(getPosenet);
-  };
-
   const createSatelite = () => {
     satelite = new Satelite();
 
     satelite.mesh.position.z = -8;
     satelite.mesh.position.y = -5;
-    satelite.mesh.position.x = -6;
+    satelite.mesh.position.x = -7;
 
     scene.add(satelite.mesh);
   };
@@ -84,7 +94,6 @@ import Satelite from "./classes/Satelite.js";
   const createScene = () => {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x72645b);
-    scene.de;
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -110,8 +119,8 @@ import Satelite from "./classes/Satelite.js";
     renderer.setSize(window.innerWidth, window.innerHeight);
   };
 
-  const animate = () => {
-    requestAnimationFrame(animate);
+  const loop = () => {
+    requestAnimationFrame(loop);
 
     render();
   };
@@ -125,5 +134,4 @@ import Satelite from "./classes/Satelite.js";
   };
 
   init();
-  animate();
 }
