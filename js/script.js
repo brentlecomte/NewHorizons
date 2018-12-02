@@ -41,11 +41,26 @@ import Satelite from "./classes/Satelite.js";
   const getPosenet = async () => {
     const net = await posenet.load();
     const pose = await net.estimateSinglePose(video, 0.5, true, 16);
-
-    posePoints = pose;
-
     requestAnimationFrame(getPosenet);
+    posePoints = pose;
+    satelite.mesh.position.x = mapValue(
+      pose.keypoints[0].position.x,
+      0,
+      600,
+      0,
+      3
+    );
+    satelite.mesh.position.y = mapValue(
+      pose.keypoints[0].position.y,
+      0,
+      600,
+      2,
+      -2
+    );
   };
+
+  const mapValue = (value, istart, istop, ostart, ostop) =>
+    ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 
   //THREE.JS
 
@@ -64,8 +79,6 @@ import Satelite from "./classes/Satelite.js";
 
   const addSatelite = () => {
     satelite = new Satelite();
-
-    console.log(satelite);
 
     satelite.mesh.position.z = -8;
     satelite.mesh.position.y = -2;
