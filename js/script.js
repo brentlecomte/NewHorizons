@@ -1,10 +1,11 @@
 import Satelite from "./classes/Satelite.js";
+import Rocket from "./classes/Rocket.js";
 // import * as posenet from "@tensorflow-models/posenet";
 
 {
-  let container, stats;
+  let container;
   let hemisphereLight, shadowLight;
-  let camera, cameraTarget, scene, renderer, mesh, satelite;
+  let camera, cameraTarget, scene, renderer, mesh, satelite, rocket;
 
   const video = document.querySelector(".video");
   video.width = 600;
@@ -16,7 +17,7 @@ import Satelite from "./classes/Satelite.js";
 
   const init = () => {
     threeInit();
-    getPosenet();
+    // getPosenet();
 
     container.appendChild(renderer.domElement);
 
@@ -31,8 +32,9 @@ import Satelite from "./classes/Satelite.js";
 
     //add elements
     addCamera();
-    addSatelite();
-
+    // addSatelite();
+    addWorld();
+    addRocket();
     loop();
   };
 
@@ -47,7 +49,7 @@ import Satelite from "./classes/Satelite.js";
       pose.keypoints[0].position.x,
       0,
       600,
-      0,
+      -3,
       3
     );
     satelite.mesh.position.y = mapValue(
@@ -86,6 +88,25 @@ import Satelite from "./classes/Satelite.js";
     scene.add(satelite.mesh);
   };
 
+  const addRocket = () => {
+    rocket = new Rocket();
+
+    rocket.mesh.position.z = -40;
+    rocket.mesh.position.y = -10;
+
+    scene.add(rocket.mesh);
+  };
+
+  const addWorld = () => {
+    const geom = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
+    const mat = new THREE.MeshBasicMaterial({ color: 0x5acd4d });
+    const sphere = new THREE.Mesh(geom, mat);
+
+    sphere.position.set(0, -415, -600);
+
+    scene.add(sphere);
+  };
+
   const createLights = () => {
     hemisphereLight = new THREE.HemisphereLight(0x000000, 0x4662f8, 0.9);
 
@@ -112,7 +133,7 @@ import Satelite from "./classes/Satelite.js";
 
   const createScene = () => {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x72645b);
+    scene.background = new THREE.Color(0x000000);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -144,8 +165,13 @@ import Satelite from "./classes/Satelite.js";
   };
 
   const render = () => {
-    satelite.mesh.rotation.x += 0.001;
-    satelite.mesh.rotation.y += 0.005;
+    // satelite.mesh.rotation.x += 0.001;
+    // satelite.mesh.rotation.y += 0.005;
+    // satelite.mesh.position.z -= 1;
+
+    // camera.position.z -= 1;
+    rocket.mesh.position.y += 0.1;
+    camera.rotation.x += 0.002;
 
     renderer.render(scene, camera);
   };
