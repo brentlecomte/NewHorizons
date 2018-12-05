@@ -5,7 +5,8 @@ import Rocket from "./classes/Rocket.js";
 {
   let container;
   let hemisphereLight, shadowLight;
-  let camera, cameraTarget, scene, renderer, mesh, satelite, rocket;
+  let camera, cameraTarget, scene, renderer, mesh, satelite, rocket, engineFire;
+  let net;
 
   const video = document.querySelector(".video");
   video.width = 600;
@@ -17,7 +18,7 @@ import Rocket from "./classes/Rocket.js";
 
   const init = () => {
     threeInit();
-    // getPosenet();
+    getPosenet();
 
     container.appendChild(renderer.domElement);
 
@@ -32,18 +33,24 @@ import Rocket from "./classes/Rocket.js";
 
     //add elements
     addCamera();
-    // addSatelite();
+    addSatelite();
     addWorld();
-    addRocket();
+    // addRocket();
+    // addEngineFire();
+
     loop();
   };
 
   //POSENET
 
   const getPosenet = async () => {
-    const net = await posenet.load();
+    net = await posenet.load();
+    setCoordinates();
+  };
+
+  const setCoordinates = async () => {
     const pose = await net.estimateSinglePose(video, 0.5, true, 16);
-    requestAnimationFrame(getPosenet);
+    requestAnimationFrame(setCoordinates);
     posePoints = pose;
     satelite.mesh.position.x = mapValue(
       pose.keypoints[0].position.x,
@@ -95,6 +102,16 @@ import Rocket from "./classes/Rocket.js";
     rocket.mesh.position.y = -10;
 
     scene.add(rocket.mesh);
+  };
+
+  const addEngineFire = () => {
+    engineFire = new EngineFire();
+
+    engineFire.mesh.position.z = -8;
+    engineFire.mesh.position.y = -2;
+    engineFire.mesh.scale.set(0.25, 0.25, 0.25);
+
+    scene.add(engineFire.mesh);
   };
 
   const addWorld = () => {
@@ -160,18 +177,18 @@ import Rocket from "./classes/Rocket.js";
 
   const loop = () => {
     requestAnimationFrame(loop);
-
     render();
   };
 
   const render = () => {
-    // satelite.mesh.rotation.x += 0.001;
-    // satelite.mesh.rotation.y += 0.005;
+    satelite.mesh.rotation.x += 0.001;
+    satelite.mesh.rotation.y += 0.005;
     // satelite.mesh.position.z -= 1;
 
     // camera.position.z -= 1;
-    rocket.mesh.position.y += 0.1;
-    camera.rotation.x += 0.002;
+    // rocket.mesh.position.y += 0.1;
+    // camera.rotation.x += 0.002;
+    // rocket.animate();
 
     renderer.render(scene, camera);
   };
