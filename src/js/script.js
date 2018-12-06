@@ -7,18 +7,26 @@ import Rocket from "./classes/Rocket.js";
   let hemisphereLight, shadowLight;
   let camera, cameraTarget, scene, renderer, mesh, satelite, rocket, engineFire;
   let net;
+  const buttonArray = ["5", "3", "1", "2", "4"];
+  let buttonPressedArray = [];
+  const $buttons = document.querySelectorAll("button");
 
   const video = document.querySelector(".video");
   video.width = 600;
   video.height = 600;
   let posePoints;
 
-  container = document.createElement("div");
-  document.body.appendChild(container);
+  container = document.querySelector(".world");
 
   const init = () => {
     threeInit();
     getPosenet();
+
+    $buttons.forEach(button =>
+      button.addEventListener("click", () => {
+        buttonEventHandler(button.textContent);
+      })
+    );
 
     container.appendChild(renderer.domElement);
 
@@ -33,10 +41,9 @@ import Rocket from "./classes/Rocket.js";
 
     //add elements
     addCamera();
-    addSatelite();
     addWorld();
-    // addRocket();
-    // addEngineFire();
+    addRocket();
+    addSatelite();
 
     loop();
   };
@@ -104,16 +111,6 @@ import Rocket from "./classes/Rocket.js";
     scene.add(rocket.mesh);
   };
 
-  const addEngineFire = () => {
-    engineFire = new EngineFire();
-
-    engineFire.mesh.position.z = -8;
-    engineFire.mesh.position.y = -2;
-    engineFire.mesh.scale.set(0.25, 0.25, 0.25);
-
-    scene.add(engineFire.mesh);
-  };
-
   const addWorld = () => {
     const geom = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
     const mat = new THREE.MeshBasicMaterial({ color: 0x5acd4d });
@@ -175,6 +172,32 @@ import Rocket from "./classes/Rocket.js";
     renderer.setSize(window.innerWidth, window.innerHeight);
   };
 
+  const buttonEventHandler = e => {
+    buttonPressedArray.push(e);
+    checkIfRightOrder();
+  };
+
+  const checkIfRightOrder = () => {
+    const equal = checkArrays(buttonPressedArray, buttonArray);
+    if (equal === true) {
+      //launch
+      console.log("true");
+    } else {
+      console.log("try again/keep going");
+    }
+  };
+
+  const checkArrays = (a, b) => {
+    if (a.length === b.length) {
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+  };
+
   const loop = () => {
     requestAnimationFrame(loop);
     render();
@@ -183,9 +206,7 @@ import Rocket from "./classes/Rocket.js";
   const render = () => {
     satelite.mesh.rotation.x += 0.001;
     satelite.mesh.rotation.y += 0.005;
-    // satelite.mesh.position.z -= 1;
 
-    // camera.position.z -= 1;
     // rocket.mesh.position.y += 0.1;
     // camera.rotation.x += 0.002;
     // rocket.animate();
