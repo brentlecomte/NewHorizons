@@ -133,7 +133,7 @@ import Sky from "./classes/Sky.js";
   };
 
   const addWorld = () => {
-    const geom = new THREE.SphereGeometry(600, 100, 100);
+    const geom = new THREE.SphereGeometry(600, 20, 20);
     const mat = new THREE.MeshBasicMaterial({ color: 0x5acd4d });
     const sphere = new THREE.Mesh(geom, mat);
 
@@ -147,7 +147,7 @@ import Sky from "./classes/Sky.js";
 
     shadowLight = new THREE.DirectionalLight(0xffffff, 0.7);
 
-    shadowLight.position.set(3, 0.15, 3);
+    shadowLight.position.set(0, 3, 5);
 
     shadowLight.castShadow = true;
 
@@ -183,7 +183,7 @@ import Sky from "./classes/Sky.js";
       1000
     );
 
-    camera.position.z = 5;
+    camera.position.y = 2;
   };
 
   const onWindowResize = () => {
@@ -236,7 +236,7 @@ import Sky from "./classes/Sky.js";
     camera.lookAt(
       new THREE.Vector3(
         rocket.mesh.position.x,
-        rocket.mesh.position.y,
+        rocket.mesh.position.y + 10,
         rocket.mesh.position.z
       )
     );

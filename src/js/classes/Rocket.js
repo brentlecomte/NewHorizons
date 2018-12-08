@@ -3,14 +3,13 @@ import Colors from "./Colors.js";
 
 class Rocket {
   constructor() {
-    const loader = new THREE.OBJLoader();
+    const loader = new THREE.ObjectLoader();
     this.engineFire = new EngineFire();
 
     this.mesh = new THREE.Mesh();
 
-    loader.load("./assets/AtlasV5.obj", object => {
-      this.mesh.scale.set(0.5, 0.5, 0.5);
-      this.mesh.add(object);
+    loader.load("./assets/AtlasV5.json", geometry => {
+      this.mesh.add(geometry);
     });
   }
 
