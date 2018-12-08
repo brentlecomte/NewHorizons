@@ -8,7 +8,12 @@ class Mercury {
 
     this.mesh = new THREE.Mesh(geom, mat);
     this.mesh.name = "Mercury";
-    this.mesh.position.x = 3;
+  }
+
+  animate() {
+    this.mesh.rotation.y -= 0.0004;
+    let date = Date.now() * 0.0004;
+    this.mesh.position.set(Math.cos(date) * 100, 0, Math.sin(date) * 100);
   }
 }
 

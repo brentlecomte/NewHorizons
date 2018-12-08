@@ -38,11 +38,24 @@ class Galaxy {
     this.mesh.add(this.saturn.mesh);
     this.saturn.mesh.position.z = -1300;
     this.mesh.add(this.neptune.mesh);
-    this.neptune.mesh.position.z = -1700;
-    this.mesh.add(this.uranus.mesh);
-    this.uranus.mesh.position.z = -2000;
+    this.uranus.mesh.position.z = -1700;
     this.mesh.add(this.pluto.mesh);
+    this.neptune.mesh.position.z = -2000;
+    this.mesh.add(this.uranus.mesh);
     this.pluto.mesh.position.z = -3670;
+  }
+
+  animate() {
+    this.sun.animate();
+    this.mercury.animate();
+    this.venus.animate();
+    this.earth.animate();
+    this.mars.animate();
+    this.jupiter.animate();
+    this.saturn.animate();
+    this.neptune.animate();
+    this.uranus.animate();
+    this.pluto.animate();
   }
 }
 

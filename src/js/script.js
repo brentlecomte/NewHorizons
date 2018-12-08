@@ -194,7 +194,7 @@ import Galaxy from "./classes/Galaxy.js";
       1000
     );
 
-    camera.position.y = 2;
+    camera.position.y = 0;
   };
 
   const onWindowResize = () => {
@@ -252,12 +252,21 @@ import Galaxy from "./classes/Galaxy.js";
     //   )
     // );
 
-    camera.position.z -= 1;
+    // document.addEventListener("keydown", e => {
+    //   switch (e.key) {
+    //     case "s":
+    //       camera.position.z += 1;
+    //       break;
+    //     case "z":
+    // camera.position.z -= 1;
+    //       break;
+    //   }
+    // });
 
     // sky.mesh.rotation.z -= 0.0001;
 
     // planet.mesh.rotation.y += 0.001;
-    // planet.animate();
+    galaxy.animate();
 
     renderer.render(scene, camera);
   };

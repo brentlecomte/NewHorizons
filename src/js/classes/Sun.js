@@ -8,6 +8,10 @@ class Sun {
 
     this.mesh = new THREE.Mesh(geom, mat);
   }
+
+  animate() {
+    this.mesh.rotation.y += 0.004;
+  }
 }
 
 export default Sun;

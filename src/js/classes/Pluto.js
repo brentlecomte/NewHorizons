@@ -8,6 +8,11 @@ class Pluto {
 
     this.mesh = new THREE.Mesh(geom, mat);
   }
+  animate() {
+    this.mesh.rotation.y += 0.01;
+    let date = Date.now() * 0.0000004;
+    this.mesh.position.set(Math.cos(date) * 3670, 0, Math.sin(date) * 3670);
+  }
 }
 
 export default Pluto;

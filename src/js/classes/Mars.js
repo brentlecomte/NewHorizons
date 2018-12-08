@@ -8,6 +8,12 @@ class Mars {
 
     this.mesh = new THREE.Mesh(geom, mat);
   }
+
+  animate() {
+    this.mesh.rotation.y += 0.11;
+    let date = Date.now() * 0.00018;
+    this.mesh.position.set(Math.cos(date) * 500, 0, Math.sin(date) * 500);
+  }
 }
 
 export default Mars;
