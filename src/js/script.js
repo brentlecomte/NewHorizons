@@ -1,6 +1,8 @@
 import Satelite from "./classes/Satelite.js";
 import Rocket from "./classes/Rocket.js";
 import Sky from "./classes/Sky.js";
+import Galaxy from "./classes/Galaxy.js";
+
 // import * as posenet from "@tensorflow-models/posenet";
 
 {
@@ -14,7 +16,8 @@ import Sky from "./classes/Sky.js";
     satelite,
     rocket,
     engineFire,
-    sky;
+    sky,
+    galaxy;
 
   let net;
   const buttonArray = ["5", "3", "1", "2", "4"];
@@ -52,10 +55,11 @@ import Sky from "./classes/Sky.js";
 
     //add elements
     addCamera();
-    addWorld();
-    addRocket();
+    addGalaxy();
+    // addWorld();
+    // addRocket();
     // addSatelite();
-    createSky();
+    // yarn
 
     loop();
   };
@@ -114,6 +118,13 @@ import Sky from "./classes/Sky.js";
     scene.add(satelite.mesh);
   };
 
+  const addGalaxy = () => {
+    galaxy = new Galaxy();
+
+    galaxy.mesh.position.set(0, -30, -800);
+
+    scene.add(galaxy.mesh);
+  };
   const addRocket = () => {
     rocket = new Rocket();
 
@@ -156,7 +167,7 @@ import Sky from "./classes/Sky.js";
     shadowLight.shadow.camera.top = 400;
     shadowLight.shadow.camera.bottom = -400;
     shadowLight.shadow.camera.near = 1;
-    shadowLight.shadow.camera.far = 1000;
+    shadowLight.shadow.camera.far = 3670;
 
     shadowLight.shadow.mapSize.width = 2048;
     shadowLight.shadow.mapSize.height = 2048;
@@ -168,7 +179,7 @@ import Sky from "./classes/Sky.js";
 
   const createScene = () => {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87ceeb);
+    scene.background = new THREE.TextureLoader().load("./assets/bg.jpg");
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -227,21 +238,26 @@ import Sky from "./classes/Sky.js";
     // satelite.mesh.rotation.x += 0.001;
     // satelite.mesh.rotation.y += 0.005;
 
-    rocket.animate();
-    if (equal === true) {
-      rocket.mesh.position.y += 0.1;
-      // camera.rotation.x += 0.002;
-      rocket.animate();
-    }
-    camera.lookAt(
-      new THREE.Vector3(
-        rocket.mesh.position.x,
-        rocket.mesh.position.y + 10,
-        rocket.mesh.position.z
-      )
-    );
+    // rocket.animate();
+    // if (equal === true) {
+    //   rocket.mesh.position.y += 0.1;
+    //   // camera.rotation.x += 0.002;
+    //   rocket.animate();
+    // }
+    // camera.lookAt(
+    //   new THREE.Vector3(
+    //     rocket.mesh.position.x,
+    //     rocket.mesh.position.y + 10,
+    //     rocket.mesh.position.z
+    //   )
+    // );
 
-    sky.mesh.rotation.z -= 0.0001;
+    camera.position.z -= 1;
+
+    // sky.mesh.rotation.z -= 0.0001;
+
+    // planet.mesh.rotation.y += 0.001;
+    // planet.animate();
 
     renderer.render(scene, camera);
   };
