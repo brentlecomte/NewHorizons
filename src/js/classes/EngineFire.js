@@ -19,6 +19,8 @@ class EngineFire {
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
+    this.mesh.position.z = -0.01;
+    this.mesh.position.x = 1.01;
   }
 
   moveFlames() {

@@ -1,11 +1,21 @@
 import Satelite from "./classes/Satelite.js";
 import Rocket from "./classes/Rocket.js";
+import Sky from "./classes/Sky.js";
 // import * as posenet from "@tensorflow-models/posenet";
 
 {
   let container;
   let hemisphereLight, shadowLight;
-  let camera, cameraTarget, scene, renderer, mesh, satelite, rocket, engineFire;
+  let camera,
+    cameraTarget,
+    scene,
+    renderer,
+    mesh,
+    satelite,
+    rocket,
+    engineFire,
+    sky;
+
   let net;
   const buttonArray = ["5", "3", "1", "2", "4"];
   let buttonPressedArray = [];
@@ -15,12 +25,13 @@ import Rocket from "./classes/Rocket.js";
   video.width = 600;
   video.height = 600;
   let posePoints;
+  let equal = false;
 
   container = document.querySelector(".world");
 
   const init = () => {
     threeInit();
-    getPosenet();
+    // getPosenet();
 
     $buttons.forEach(button =>
       button.addEventListener("click", () => {
@@ -43,7 +54,8 @@ import Rocket from "./classes/Rocket.js";
     addCamera();
     addWorld();
     addRocket();
-    addSatelite();
+    // addSatelite();
+    createSky();
 
     loop();
   };
@@ -106,17 +118,26 @@ import Rocket from "./classes/Rocket.js";
     rocket = new Rocket();
 
     rocket.mesh.position.z = -40;
-    rocket.mesh.position.y = -10;
+    rocket.mesh.position.y = -8;
+    rocket.mesh.rotation.y = 1;
 
     scene.add(rocket.mesh);
   };
 
+  const createSky = () => {
+    sky = new Sky();
+    sky.mesh.position.y = -600;
+    sky.mesh.position.z = -50;
+
+    scene.add(sky.mesh);
+  };
+
   const addWorld = () => {
-    const geom = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
+    const geom = new THREE.SphereGeometry(600, 100, 100);
     const mat = new THREE.MeshBasicMaterial({ color: 0x5acd4d });
     const sphere = new THREE.Mesh(geom, mat);
 
-    sphere.position.set(0, -415, -600);
+    sphere.position.set(0, -630, -200);
 
     scene.add(sphere);
   };
@@ -147,7 +168,7 @@ import Rocket from "./classes/Rocket.js";
 
   const createScene = () => {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
+    scene.background = new THREE.Color(0x87ceeb);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -159,7 +180,7 @@ import Rocket from "./classes/Rocket.js";
       35,
       window.innerWidth / window.innerHeight,
       1,
-      100
+      1000
     );
 
     camera.position.z = 5;
@@ -178,10 +199,9 @@ import Rocket from "./classes/Rocket.js";
   };
 
   const checkIfRightOrder = () => {
-    const equal = checkArrays(buttonPressedArray, buttonArray);
+    equal = checkArrays(buttonPressedArray, buttonArray);
     if (equal === true) {
-      //launch
-      console.log("true");
+      rocket.addFire();
     } else {
       console.log("try again/keep going");
     }
@@ -204,12 +224,24 @@ import Rocket from "./classes/Rocket.js";
   };
 
   const render = () => {
-    satelite.mesh.rotation.x += 0.001;
-    satelite.mesh.rotation.y += 0.005;
+    // satelite.mesh.rotation.x += 0.001;
+    // satelite.mesh.rotation.y += 0.005;
 
-    // rocket.mesh.position.y += 0.1;
-    // camera.rotation.x += 0.002;
-    // rocket.animate();
+    rocket.animate();
+    if (equal === true) {
+      rocket.mesh.position.y += 0.1;
+      // camera.rotation.x += 0.002;
+      rocket.animate();
+    }
+    camera.lookAt(
+      new THREE.Vector3(
+        rocket.mesh.position.x,
+        rocket.mesh.position.y,
+        rocket.mesh.position.z
+      )
+    );
+
+    sky.mesh.rotation.z -= 0.0001;
 
     renderer.render(scene, camera);
   };

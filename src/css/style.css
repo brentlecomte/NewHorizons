@@ -19,3 +19,7 @@ html {
 .video {
   display: none;
 }
+
+.world {
+  box-sizing: border-box;
+}
