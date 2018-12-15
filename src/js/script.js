@@ -21,7 +21,8 @@ import Sky from "./classes/Sky.js";
     posePoints,
     rocket,
     engineFire,
-    sky;
+    sky,
+    detectionSphere;
 
   let buttonPressedArray = [];
   let equal = false;
@@ -220,7 +221,7 @@ import Sky from "./classes/Sky.js";
       //add elements
       addCamera();
       addGalaxy();
-      // addSatelite();
+      addSatelite();
 
       loop();
     };
@@ -233,21 +234,49 @@ import Sky from "./classes/Sky.js";
     const setCoordinates = async () => {
       const pose = await net.estimateSinglePose(video, 0.5, true, 16);
       requestAnimationFrame(setCoordinates);
+      // if (pose.keypoints[0].position.x < 200) {
+      //   camera.position.set(
+      //     Math.cos(Date.now() * 0.03) * 4,
+      //     -30,
+      //     Math.sin(Date.now() * 0.03) * 4 - 790
+      //   );
+
+      //   console.log("cam", camera.position);
+      // } else if (pose.keypoints[0].position.x > 400) {
+      //   console.log("rechts");
+      // } else {
+      //   console.log("middden");
+      // }
+
       posePoints = pose;
+
       satelite.mesh.position.x = mapValue(
         pose.keypoints[0].position.x,
         0,
         600,
-        -3,
-        3
+        camera.position.x - 3,
+        camera.position.x + 3
       );
+
       satelite.mesh.position.y = mapValue(
         pose.keypoints[0].position.y,
         0,
         600,
-        2,
-        -2
+        camera.position.y + 2,
+        camera.position.y - 2
       );
+      detectionSphere.position.set(
+        satelite.mesh.position.x,
+        satelite.mesh.position.y + 0.3,
+        satelite.mesh.position.z
+      );
+      detectionSphere.rotation.set(
+        satelite.mesh.rotation.x,
+        satelite.mesh.rotation.y,
+        satelite.mesh.rotation.z
+      );
+
+      satelite.mesh.position.z = camera.position.z - 2;
     };
 
     const mapValue = (value, istart, istop, ostart, ostop) =>
@@ -269,6 +298,19 @@ import Sky from "./classes/Sky.js";
     const addSatelite = () => {
       satelite = new Satelite();
 
+      satelite.mesh.castShadow = true;
+      satelite.mesh.receiveShadow = true;
+
+      const geom = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      const mat = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0
+      });
+
+      detectionSphere = new THREE.Mesh(geom, mat);
+
+      scene.add(detectionSphere);
       scene.add(satelite.mesh);
     };
 
@@ -323,24 +365,51 @@ import Sky from "./classes/Sky.js";
 
     const loop = () => {
       requestAnimationFrame(loop);
+      for (
+        let vertexIndex = 0;
+        vertexIndex < detectionSphere.geometry.vertices.length;
+        vertexIndex++
+      ) {
+        const localVertex = detectionSphere.geometry.vertices[
+          vertexIndex
+        ].clone();
+        const globalVertex = detectionSphere.matrix.multiplyVector3(
+          localVertex
+        );
+        const directionVector = globalVertex.sub(detectionSphere.position);
+
+        const ray = new THREE.Ray(
+          detectionSphere.position,
+          directionVector.clone().normalize()
+        );
+        const collisionResults = ray.intersectObjects(collidableMeshList);
+        if (
+          collisionResults.length > 0 &&
+          collisionResults[0].distance < directionVector.length()
+        ) {
+          console.log("collision");
+        }
+      }
+
       render();
     };
 
     const render = () => {
-      // satelite.mesh.rotation.x += 0.001;
-      // satelite.mesh.rotation.y += 0.005;
+      satelite.moveSatellite();
 
-      camera.position.set(
-        galaxy.earth.mesh.position.x,
-        galaxy.earth.mesh.position.y - 30,
-        galaxy.earth.mesh.position.z - 790
-      );
+      // detectionSphere.position.set(
+      //   camera.position.x,
+      //   camera.position.y,
+      //   camera.position.z + 12
+      // );
+
+      console.log(camera.position);
 
       // camera.lookAt(
       //   new THREE.Vector3(
-      //     galaxy.earth.mesh.position.x,
-      //     galaxy.earth.mesh.position.y - 30,
-      //     galaxy.earth.mesh.position.z - 800
+      //     detectionSphere.position.x,
+      //     detectionSphere.position.y,
+      //     detectionSphere.position.z
       //   )
       // );
 

@@ -8,6 +8,7 @@ import Saturn from "./Saturn.js";
 import Neptune from "./Neptune.js";
 import Uranus from "./Uranus.js";
 import Pluto from "./Pluto.js";
+import Astreoids from "./Astreoids.js";
 
 class Galaxy {
   constructor() {
@@ -21,6 +22,7 @@ class Galaxy {
     this.neptune = new Neptune();
     this.uranus = new Uranus();
     this.pluto = new Pluto();
+    this.astreoids = new Astreoids();
 
     this.mesh = new THREE.Mesh();
     this.mesh.add(this.sun.mesh);
@@ -33,6 +35,10 @@ class Galaxy {
     this.earth.mesh.position.z = -400;
     this.mesh.add(this.mars.mesh);
     this.mars.mesh.position.z = -500;
+    this.mesh.add(this.astreoids.mesh);
+    this.astreoids.mesh.position.z = 0;
+    this.astreoids.mesh.rotation.x = Math.PI / 2;
+    this.astreoids.mesh.position.y = 10;
     this.mesh.add(this.jupiter.mesh);
     this.jupiter.mesh.position.z = -1000;
     this.mesh.add(this.saturn.mesh);
@@ -57,6 +63,7 @@ class Galaxy {
     this.neptune.animate();
     this.uranus.animate();
     this.pluto.animate();
+    this.astreoids.animate();
   }
 }
 

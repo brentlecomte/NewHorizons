@@ -1,7 +1,6 @@
 class Cloud {
   constructor() {
     this.mesh = new THREE.Object3D();
-
     const geom = new THREE.BoxGeometry(1, 1, 1);
 
     const mat = new THREE.MeshPhongMaterial({
