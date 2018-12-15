@@ -1,11 +1,10 @@
 class Satelite {
   constructor() {
-    const loader = new THREE.OBJLoader();
+    const loader = new THREE.ObjectLoader();
 
     this.mesh = new THREE.Mesh();
 
-    loader.load("./assets/New_Horizons/satelite.obj", object => {
-      this.mesh.scale.set(0.5, 0.5, 0.5);
+    loader.load("./assets/New_Horizons/satellite.json", object => {
       this.mesh.add(object);
     });
   }

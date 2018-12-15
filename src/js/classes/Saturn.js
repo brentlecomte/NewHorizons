@@ -17,7 +17,7 @@ class Earth {
   animate() {
     this.atmosphere.moveRings();
     this.mesh.rotation.y += 0.2;
-    let date = Date.now() * 0.000003;
+    let date = Date.now() * -0.000000003;
     this.mesh.position.set(Math.cos(date) * 1300, 0, Math.sin(date) * 1300);
   }
 }

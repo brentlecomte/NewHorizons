@@ -10,7 +10,7 @@ class Pluto {
   }
   animate() {
     this.mesh.rotation.y += 0.01;
-    let date = Date.now() * 0.0000004;
+    let date = Date.now() * -0.0000000004;
     this.mesh.position.set(Math.cos(date) * 3670, 0, Math.sin(date) * 3670);
   }
 }

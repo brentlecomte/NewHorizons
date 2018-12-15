@@ -7,6 +7,8 @@ class Sun {
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
+    this.mesh.castShadows = false;
+    this.mesh.receiveShadows = false;
   }
 
   animate() {

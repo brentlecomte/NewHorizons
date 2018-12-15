@@ -11,7 +11,7 @@ class Uranus {
 
   animate() {
     this.mesh.rotation.y += 0.13;
-    let date = Date.now() * 0.000001;
+    let date = Date.now() * -0.000000001;
     this.mesh.position.set(Math.cos(date) * 1700, 0, Math.sin(date) * 1700);
   }
 }
