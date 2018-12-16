@@ -45,9 +45,10 @@ class Galaxy {
     this.saturn.mesh.position.z = -1300;
     this.mesh.add(this.neptune.mesh);
     this.uranus.mesh.position.z = -1700;
-    this.mesh.add(this.pluto.mesh);
+
     this.neptune.mesh.position.z = -2000;
     this.mesh.add(this.uranus.mesh);
+    this.mesh.add(this.pluto.mesh);
 
     this.pluto.mesh.position.z = -3670;
   }
