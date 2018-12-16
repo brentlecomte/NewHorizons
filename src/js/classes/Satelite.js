@@ -4,7 +4,7 @@ class Satelite {
 
     this.mesh = new THREE.Mesh();
 
-    loader.load("./assets/New_Horizons/satellite.json", object => {
+    loader.load("./assets/models/satellite.json", object => {
       object.scale.set(0.1, 0.1, 0.1);
       this.mesh.add(object);
     });

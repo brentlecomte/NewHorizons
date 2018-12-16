@@ -36,13 +36,8 @@ import Sky from "./classes/Sky.js";
   let buttonPressedArray = [];
   let equal = false;
   let readyforLaunch = false;
-<<<<<<< HEAD
   let countdownCounter = 10,
     jupiterPassed = false;
-=======
-  let jupiterPassed = false;
-  let countdownCounter = 10;
->>>>>>> 11d7fb7212e8e9d4785868fb6bca1aeac7bfd617
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -238,8 +233,8 @@ import Sky from "./classes/Sky.js";
 
     const countdown = () => {
       if (countdownCounter > 1) {
-        $countdown.classList.remove('hide');
-        countdownCounter = countdownCounter -1;
+        $countdown.classList.remove("hide");
+        countdownCounter = countdownCounter - 1;
         $countdown.innerHTML = countdownCounter;
       } else {
         $countdown.classList.add("hide");
@@ -389,7 +384,7 @@ import Sky from "./classes/Sky.js";
 
     const createScene = () => {
       scene = new THREE.Scene();
-      scene.background = new THREE.TextureLoader().load("./assets/bg.jpg");
+      scene.background = new THREE.TextureLoader().load("./assets/img/bg.jpg");
 
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(window.devicePixelRatio);

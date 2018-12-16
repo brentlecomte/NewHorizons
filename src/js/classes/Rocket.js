@@ -8,7 +8,7 @@ class Rocket {
 
     this.mesh = new THREE.Mesh();
 
-    loader.load("./assets/AtlasV5.json", geometry => {
+    loader.load("./assets/models/atlasV5.json", geometry => {
       this.mesh.add(geometry);
     });
   }

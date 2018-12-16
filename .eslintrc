@@ -1,5 +1,6 @@
 {
-  "extends": [
-    "devine/react"
-  ]
+  "extends": "devine",
+  "globals": {
+    "THREE": true
+  }
 }

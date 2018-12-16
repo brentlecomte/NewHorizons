@@ -3,7 +3,7 @@ class EarthAsmphere {
     const geom = new THREE.SphereGeometry(0.94, 40, 40);
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/earth_clouds.png"),
+      map: new THREE.TextureLoader().load("./assets/img/earth_clouds.png"),
       transparent: true,
       opacity: 0.7
     });

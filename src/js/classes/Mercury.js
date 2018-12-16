@@ -3,7 +3,7 @@ class Mercury {
     const geom = new THREE.SphereGeometry(0.17, 40, 40);
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/mercury.jpg")
+      map: new THREE.TextureLoader().load("./assets/img/mercury.jpg")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);

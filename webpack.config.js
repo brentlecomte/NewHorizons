@@ -1,43 +1,88 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const postcssPresetEnv = require("postcss-preset-env");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const webpack = require(`webpack`);
 
-const ImageminPlugin = require("imagemin-webpack-plugin").default;
-const imageminJpegRecompress = require("imagemin-jpeg-recompress");
+module.exports = (env, { mode }) => {
+  console.log(mode);
 
-const CriticalPlugin = require("webpack-plugin-critical").CriticalPlugin;
+  const plugins = [
+    new HtmlWebPackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html"
+    }),
+    new MiniCssExtractPlugin({
+      filename: "style.[contenthash].css"
+    }),
+    new OptimizeCSSAssetsPlugin()
+  ];
 
-const merge = require("webpack-merge");
-const parts = require("./webpack.parts");
+  if (mode === "production") {
+    // const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin');
+    // const path = require('path');
+    // plugins.push(
+    //   new HtmlCriticalWebpackPlugin({
+    //     base: path.resolve(__dirname, 'dist'),
+    //     src: 'index.html',
+    //     dest: 'index.html',
+    //     inline: true,
+    //     minify: true,
+    //     extract: true,
+    //     width: 1500, // standaard op 375x565, maar niet voldoende om op desktop 100% te scoren
+    //     height: 700,
+    //     penthouse: {
+    //       blockJSRequests: false
+    //     }
+    //   })
+    // );
+  } else {
+    const webpack = require("webpack");
+    plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
 
-const port = 3000;
-
-const PATHS = {
-  src: path.join(__dirname, "src"),
-  dist: path.join(__dirname, "dist")
-};
-
-const commonConfig = merge([
-  {
-    entry: [
-      "babel-polyfill",
-      path.join(PATHS.src, "css/style.css"),
-      path.join(PATHS.src, "js/script.js")
-    ],
+  return {
     output: {
-      path: PATHS.dist,
-      filename: `js/script.[hash].js`
+      filename: "[name].[hash].js"
+    },
+    devServer: {
+      overlay: true,
+      hot: true,
+      contentBase: "./src"
     },
     module: {
       rules: [
         {
-          test: /\.html$/,
-          loader: `html-loader`,
-          options: {
-            attrs: [`img:src`, `source:srcset`]
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "babel-loader"
           }
         },
         {
-          test: /\.(jpe?g|png|gif|webp|svg|mp3)$/,
+          test: /\.html$/,
+          use: [
+            {
+              loader: "html-srcsets-loader",
+              options: {
+                attrs: [":src", ":srcset"]
+              }
+            }
+          ]
+        },
+        {
+          test: /\.(jpe?g|png|woff|woff2|svg|webp)$/,
+          use: {
+            loader: "url-loader",
+            options: {
+              limit: 1000,
+              context: "./src",
+              name: "[path][name].[ext]"
+            }
+          }
+        },
+        {
+          test: /\.(mp3)$/,
           use: [
             {
               loader: `file-loader`,
@@ -46,81 +91,32 @@ const commonConfig = merge([
                 context: `./src`,
                 name: `[path][name].[ext]`
               }
-            },
-            {
-              loader: `image-webpack-loader`,
-              options: {
-                bypassOnDebug: true,
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65
-                },
-                // optipng.enabled: false will disable optipng
-                optipng: {
-                  enabled: false
-                },
-                pngquant: {
-                  quality: "65-90",
-                  speed: 4
-                },
-                gifsicle: {
-                  interlaced: false
-                },
-                // the webp option will enable WEBP
-                webp: {
-                  quality: 75
-                }
-              }
             }
           ]
         },
         {
-          test: /\.(js)$/,
-          exclude: /node_modules/,
-          loader: `babel-loader`
+          test: /\.css$/,
+          use: [
+            mode === "production"
+              ? MiniCssExtractPlugin.loader
+              : "style-loader",
+            "css-loader",
+            "resolve-url-loader",
+            {
+              loader: "postcss-loader",
+              options: {
+                sourceMap: true,
+                plugins: [
+                  require("postcss-import"),
+                  require("postcss-will-change"),
+                  postcssPresetEnv({ stage: 0 })
+                ]
+              }
+            }
+          ]
         }
       ]
     },
-    plugins: [
-      new HtmlWebpackPlugin({
-        template: "./src/index.html"
-      })
-    ]
-  }
-]);
-
-const productionConfig = merge([
-  parts.extractCSS(),
-  {
-    plugins: [
-      new ImageminPlugin({
-        test: /\.(jpe?g)$/i,
-        plugins: [imageminJpegRecompress({})]
-      }),
-      new CriticalPlugin({
-        src: "index.html",
-        inline: true,
-        minify: true,
-        dest: "index.html"
-      })
-    ]
-  }
-]);
-
-const developmentConfig = merge([
-  {
-    devServer: {
-      overlay: true,
-      contentBase: PATHS.src
-    }
-  },
-  parts.loadCSS()
-]);
-
-module.exports = env => {
-  if (process.env.NODE_ENV === "production") {
-    console.log("building production");
-    return merge(commonConfig, productionConfig);
-  }
-  return merge(commonConfig, developmentConfig);
+    plugins
+  };
 };

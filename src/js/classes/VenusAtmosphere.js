@@ -3,7 +3,7 @@ class VenusAtmosphere {
     const geom = new THREE.SphereGeometry(0.88, 40, 40);
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/venus_atmosphere.jpg"),
+      map: new THREE.TextureLoader().load("./assets/img/venus_atmosphere.jpg"),
       transparent: true,
       opacity: 0.9
     });

@@ -6,7 +6,7 @@ class Earth {
     this.atmosphere = new EarthAtmosphere();
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/earth.jpg")
+      map: new THREE.TextureLoader().load("./assets/img/earth.jpg")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
