@@ -27,6 +27,7 @@ import Sky from "./classes/Sky.js";
   let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
+  let readyforLaunch = false;
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -34,6 +35,7 @@ import Sky from "./classes/Sky.js";
   const $buttons = document.querySelectorAll("button");
   const $text = document.querySelector(".text");
   const $input = document.querySelector(".input");
+  const $audio = document.querySelector("audio");
 
   const init = () => {
     video.width = 600;
@@ -169,18 +171,22 @@ import Sky from "./classes/Sky.js";
     const checkIfRightOrder = () => {
       equal = checkArrays(buttonPressedArray, buttonArray);
       if (equal === true) {
-        $input.innerHTML = "you did it!";
-        rocket.addFire();
-        //hide buttons
+        //button combination is right
+        $audio.play();
+        $input.innerHTML = "ready to launch rocket";
+        //wait to launch untill countdown is complete
+        setTimeout(launchRocket, 10000);
+        $text.classList.add('hide');
         $buttons.forEach(button =>
           button.classList.add('hide')
         );
-        $text.classList.add('hide');
       } else {
         if (buttonPressedArray.length < buttonArray.length) {
+          //if they haven't pressed enough buttons
           $input.innerHTML = "keep going";
           console.log("keep going");
         } else {
+          //if the combination isn't right
           console.log("try again");
           $input.innerHTML = "try again";
           buttonPressedArray = [];
@@ -189,6 +195,12 @@ import Sky from "./classes/Sky.js";
         // console.log("try again/keep going");
       }
     };
+
+    const launchRocket = () => {
+      readyforLaunch = true;
+      rocket.addFire();
+      $input.classList.add('hide');
+    }
 
     const checkArrays = (a, b) => {
       if (a.length === b.length) {
@@ -208,7 +220,8 @@ import Sky from "./classes/Sky.js";
 
     const render = () => {
       rocket.animate();
-      if (equal === true) {
+      // change to timer
+      if (readyforLaunch === true) {
         rocket.mesh.position.y += 0.1;
         rocket.animate();
       }
