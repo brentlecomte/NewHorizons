@@ -27,7 +27,7 @@ html {
 .countdown {
   color: white;
   font-size: 6rem;
-  font-family: helvetica;
+  font-family: Helvetica, sans-serif;
 }
 
 .world {
@@ -53,10 +53,14 @@ html {
   justify-content: space-around;
 }
 
-.text {
-  color: blue;
+.text, .input {
+  color: white;
   text-transform: uppercase;
-  font-family: helvetica;
+  font-family: Helvetica, sans-serif;
+}
+
+.input {
+  color: white;
 }
 
 .buttons button {

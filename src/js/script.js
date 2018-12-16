@@ -1,6 +1,7 @@
 import Satelite from "./classes/Satelite.js";
 import Galaxy from "./classes/Galaxy.js";
 import Rocket from "./classes/Rocket.js";
+import Platform from "./classes/Platform.js";
 import Sky from "./classes/Sky.js";
 
 {
@@ -21,6 +22,7 @@ import Sky from "./classes/Sky.js";
     posePoints,
     rocket,
     engineFire,
+    platform,
     sky,
     detectionSphere,
     radius,
@@ -34,8 +36,13 @@ import Sky from "./classes/Sky.js";
   let buttonPressedArray = [];
   let equal = false;
   let readyforLaunch = false;
+<<<<<<< HEAD
   let countdownCounter = 10,
     jupiterPassed = false;
+=======
+  let jupiterPassed = false;
+  let countdownCounter = 10;
+>>>>>>> 11d7fb7212e8e9d4785868fb6bca1aeac7bfd617
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -51,8 +58,8 @@ import Sky from "./classes/Sky.js";
     video.width = 600;
     video.height = 600;
 
-    // launch();
-    space();
+    launch();
+    // space();
 
     container.appendChild(renderer.domElement);
     window.addEventListener("resize", onWindowResize, false);
@@ -75,6 +82,7 @@ import Sky from "./classes/Sky.js";
       addCamera();
       addWorld();
       addRocket();
+      addPlatform();
       createSky();
 
       loop();
@@ -144,13 +152,26 @@ import Sky from "./classes/Sky.js";
       rocket = new Rocket();
 
       rocket.mesh.position.z = -40;
-      rocket.mesh.position.y = -8;
+      rocket.mesh.position.y = -5;
       rocket.mesh.rotation.y = 1;
 
       rocket.mesh.castShadow = true;
       rocket.mesh.receiveShadow = true;
 
       scene.add(rocket.mesh);
+    };
+
+    const addPlatform = () => {
+      platform = new Platform();
+
+      platform.mesh.position.z = -39;
+      platform.mesh.position.y = -7;
+      platform.mesh.rotation.z = 0;
+
+      platform.mesh.castShadow = true;
+      platform.mesh.receiveShadow = true;
+
+      scene.add(platform.mesh);
     };
 
     const createSky = () => {
@@ -175,6 +196,7 @@ import Sky from "./classes/Sky.js";
 
     const buttonEventHandler = e => {
       buttonPressedArray.push(e);
+      $input.innerHTML = buttonPressedArray;
       checkIfRightOrder();
     };
 
@@ -195,7 +217,7 @@ import Sky from "./classes/Sky.js";
       } else {
         if (buttonPressedArray.length < buttonArray.length) {
           //if they haven't pressed enough buttons
-          $input.innerHTML = "keep going";
+          $input.innerHTML = buttonPressedArray;
           console.log("keep going");
         } else {
           //if the combination isn't right
@@ -215,9 +237,9 @@ import Sky from "./classes/Sky.js";
     };
 
     const countdown = () => {
-      if (countdownCounter > 0) {
-        $countdown.classList.remove("hide");
-        countdownCounter = countdownCounter - 1;
+      if (countdownCounter > 1) {
+        $countdown.classList.remove('hide');
+        countdownCounter = countdownCounter -1;
         $countdown.innerHTML = countdownCounter;
       } else {
         $countdown.classList.add("hide");
