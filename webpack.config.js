@@ -37,7 +37,7 @@ const commonConfig = merge([
           }
         },
         {
-          test: /\.(jpe?g|png|gif|webp|svg)$/,
+          test: /\.(jpe?g|png|gif|webp|svg|mp3)$/,
           use: [
             {
               loader: `file-loader`,

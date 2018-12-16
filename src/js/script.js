@@ -34,7 +34,8 @@ import Sky from "./classes/Sky.js";
   let buttonPressedArray = [];
   let equal = false;
   let readyforLaunch = false;
-  let countdownCounter = 10;
+  let countdownCounter = 10,
+    jupiterPassed = false;
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
