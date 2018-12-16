@@ -30,11 +30,8 @@ import Sky from "./classes/Sky.js";
   let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
-<<<<<<< HEAD
   let readyforLaunch = false;
-=======
-  let jupiterPassed = false;
->>>>>>> 1d40329e4a366c30f711e68e4204ee1a057bd994
+  let countdownCounter = 10;
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -43,6 +40,7 @@ import Sky from "./classes/Sky.js";
   const $text = document.querySelector(".text");
   const $input = document.querySelector(".input");
   const $audio = document.querySelector("audio");
+  const $countdown = document.querySelector('.countdown');
 
   const init = () => {
     video.width = 600;
@@ -183,10 +181,15 @@ import Sky from "./classes/Sky.js";
         $input.innerHTML = "ready to launch rocket";
         //wait to launch untill countdown is complete
         setTimeout(launchRocket, 10000);
+
+        $countdown.innerHTML = countdownCounter;
+        setInterval(countdown, 1000);
+
         $text.classList.add('hide');
         $buttons.forEach(button =>
           button.classList.add('hide')
         );
+
       } else {
         if (buttonPressedArray.length < buttonArray.length) {
           //if they haven't pressed enough buttons
@@ -207,6 +210,17 @@ import Sky from "./classes/Sky.js";
       readyforLaunch = true;
       rocket.addFire();
       $input.classList.add('hide');
+    }
+
+    const countdown = () => {
+      if (countdownCounter > 0) {
+        $countdown.classList.remove('hide');
+        countdownCounter = countdownCounter -1;
+        $countdown.innerHTML = countdownCounter;
+      } else {
+        $countdown.classList.add('hide');
+        clearInterval(countdown);
+      }
     }
 
     const checkArrays = (a, b) => {
