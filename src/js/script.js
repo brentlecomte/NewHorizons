@@ -36,6 +36,7 @@ import Sky from "./classes/Sky.js";
   let buttonPressedArray = [];
   let equal = false;
   let readyforLaunch = false;
+  let jupiterPassed = false;
   let countdownCounter = 10;
 
   const video = document.querySelector(".video");
@@ -52,8 +53,8 @@ import Sky from "./classes/Sky.js";
     video.width = 600;
     video.height = 600;
 
-    // launch();
-    space();
+    launch();
+    // space();
 
     container.appendChild(renderer.domElement);
     window.addEventListener("resize", onWindowResize, false);
@@ -158,7 +159,7 @@ import Sky from "./classes/Sky.js";
     const addPlatform = () => {
       platform = new Platform();
 
-      platform.mesh.position.z = -40;
+      platform.mesh.position.z = -39;
       platform.mesh.position.y = -7;
       platform.mesh.rotation.z = 0;
 
