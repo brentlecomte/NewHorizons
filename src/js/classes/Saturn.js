@@ -6,7 +6,7 @@ class Earth {
     this.atmosphere = new SaturnRings();
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/saturn.jpg")
+      map: new THREE.TextureLoader().load("./assets/img/saturn.jpg")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);

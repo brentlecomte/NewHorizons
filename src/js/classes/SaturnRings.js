@@ -3,7 +3,7 @@ class SaturnRings {
     const geom = new THREE.RingGeometry(9.2, 10.2, 40);
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/saturnRing.png")
+      map: new THREE.TextureLoader().load("./assets/img/saturnRing.png")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);

@@ -3,7 +3,7 @@ class Pluto {
     const geom = new THREE.SphereGeometry(0.16, 40, 40);
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/pluto.jpg")
+      map: new THREE.TextureLoader().load("./assets/img/pluto.jpg")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);

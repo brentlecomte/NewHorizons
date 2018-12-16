@@ -6,7 +6,7 @@ class Venus {
     this.atmosphere = new VenusAtmosphere();
 
     const mat = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/venus_surface.jpg")
+      map: new THREE.TextureLoader().load("./assets/img/venus_surface.jpg")
     });
 
     this.mesh = new THREE.Mesh(geom, mat);

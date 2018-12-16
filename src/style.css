@@ -1,4 +1,4 @@
-@import "reset.css";
+@import "./css/reset.css";
 
 html {
   box-sizing: border-box;
@@ -53,7 +53,8 @@ html {
   justify-content: space-around;
 }
 
-.text, .input {
+.text,
+.input {
   color: white;
   text-transform: uppercase;
   font-family: Helvetica, sans-serif;
