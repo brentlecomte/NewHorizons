@@ -24,6 +24,7 @@ import Sky from "./classes/Sky.js";
     sky,
     detectionSphere;
 
+  let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
 
@@ -318,6 +319,7 @@ import Sky from "./classes/Sky.js";
       galaxy = new Galaxy();
 
       galaxy.mesh.position.set(0, -30, -800);
+      collidableMeshList.push(galaxy.astreoids.mesh);
 
       scene.add(galaxy.mesh);
     };
@@ -365,31 +367,61 @@ import Sky from "./classes/Sky.js";
 
     const loop = () => {
       requestAnimationFrame(loop);
-      for (
-        let vertexIndex = 0;
-        vertexIndex < detectionSphere.geometry.vertices.length;
-        vertexIndex++
-      ) {
-        const localVertex = detectionSphere.geometry.vertices[
-          vertexIndex
-        ].clone();
-        const globalVertex = detectionSphere.matrix.multiplyVector3(
-          localVertex
-        );
-        const directionVector = globalVertex.sub(detectionSphere.position);
 
-        const ray = new THREE.Ray(
-          detectionSphere.position,
-          directionVector.clone().normalize()
-        );
-        const collisionResults = ray.intersectObjects(collidableMeshList);
-        if (
-          collisionResults.length > 0 &&
-          collisionResults[0].distance < directionVector.length()
-        ) {
-          console.log("collision");
-        }
-      }
+      // console.log("earth", galaxy.earth.mesh.position);
+      // console.log("jupiter", galaxy.jupiter.mesh.position);
+      let radius =
+        Math.sqrt(
+          Math.pow(
+            galaxy.jupiter.mesh.position.x - galaxy.earth.mesh.position.x,
+            2
+          ) +
+            Math.pow(
+              galaxy.jupiter.mesh.position.z - galaxy.earth.mesh.position.z,
+              2
+            )
+        ) / 2;
+
+      let centerpointx =
+        (galaxy.earth.mesh.position.x + galaxy.jupiter.mesh.position.x) / 2;
+      let centerpointz =
+        (galaxy.earth.mesh.position.z + galaxy.jupiter.mesh.position.z) / 2;
+
+      console.log(radius);
+
+      let speed = Date.now() * -0.0001;
+
+      satelite.mesh.position.set(
+        Math.cos(speed) * radius + centerpointx,
+        -30,
+        Math.sin(speed) * radius + centerpointz - 800
+      );
+
+      // for (
+      //   let vertexIndex = 0;
+      //   vertexIndex < detectionSphere.geometry.vertices.length;
+      //   vertexIndex++
+      // ) {
+      //   const localVertex = detectionSphere.geometry.vertices[
+      //     vertexIndex
+      //   ].clone();
+      //   const globalVertex = detectionSphere.matrix.applyMatrix4(localVertex);
+      //   const directionVector = globalVertex.sub(detectionSphere.position);
+
+      //   const ray = new THREE.Raycaster(
+      //     detectionSphere.position,
+      //     directionVector.clone().normalize()
+      //   );
+      //   const collisionResults = ray.intersectObjects(collidableMeshList);
+      //   console.log(collisionResults);
+
+      //   if (
+      //     collisionResults.length > 0 &&
+      //     collisionResults[0].distance < directionVector.length()
+      //   ) {
+      //     console.log("collision");
+      //   }
+      // }
 
       render();
     };
@@ -397,13 +429,11 @@ import Sky from "./classes/Sky.js";
     const render = () => {
       satelite.moveSatellite();
 
-      // detectionSphere.position.set(
-      //   camera.position.x,
-      //   camera.position.y,
-      //   camera.position.z + 12
-      // );
-
-      console.log(camera.position);
+      camera.position.set(
+        satelite.mesh.position.x,
+        satelite.mesh.position.y,
+        satelite.mesh.position.z + 2
+      );
 
       // camera.lookAt(
       //   new THREE.Vector3(
