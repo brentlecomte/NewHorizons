@@ -8,6 +8,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/traverse": "^7.2.2",
     "babel-loader": "^8.0.4",
+    "babel-polyfill": "^6.26.0",
     "css-loader": "^1.0.0",
     "cssnano": "^4.1.5",
     "eslint": "^5.10.0",

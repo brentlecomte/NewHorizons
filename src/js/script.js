@@ -53,8 +53,7 @@ import Sky from "./classes/Sky.js";
     video.width = 600;
     video.height = 600;
 
-    launch();
-    // space();
+    space();
 
     container.appendChild(renderer.domElement);
     window.addEventListener("resize", onWindowResize, false);
