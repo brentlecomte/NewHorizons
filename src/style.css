@@ -1,0 +1,74 @@
+@import "./css/reset.css";
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  height: 100%;
+  width: 100%;
+}
+
+*,
+*::before,
+*::after {
+  /* stylelint-disable-line */
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.video {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
+
+.countdown {
+  color: white;
+  font-size: 6rem;
+  font-family: Helvetica, sans-serif;
+}
+
+.world {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+}
+
+.buttons {
+  display: flex;
+  position: absolute;
+  width: 100vw;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+  bottom: 0;
+  height: 12rem;
+}
+
+.button-div {
+  width: 30rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.text,
+.input {
+  color: white;
+  text-transform: uppercase;
+  font-family: Helvetica, sans-serif;
+}
+
+.input {
+  color: white;
+}
+
+.buttons button {
+  background-color: blue;
+  border: none;
+  width: 5rem;
+  height: 7rem;
+  color: white;
+  font-size: 3rem;
+}
