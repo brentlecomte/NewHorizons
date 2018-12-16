@@ -24,6 +24,12 @@ html {
   display: none;
 }
 
+.countdown {
+  color: white;
+  font-size: 6rem;
+  font-family: helvetica;
+}
+
 .world {
   box-sizing: border-box;
   display: block;

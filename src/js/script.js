@@ -33,7 +33,8 @@ import Sky from "./classes/Sky.js";
   let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
-  let jupiterPassed = false;
+  let readyforLaunch = false;
+  let countdownCounter = 10;
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -42,6 +43,8 @@ import Sky from "./classes/Sky.js";
   const $text = document.querySelector(".text");
   const $input = document.querySelector(".input");
   const $buttoncontainer = document.querySelector(".buttons");
+  const $audio = document.querySelector("audio");
+  const $countdown = document.querySelector(".countdown");
 
   const init = () => {
     video.width = 600;
@@ -177,22 +180,47 @@ import Sky from "./classes/Sky.js";
     const checkIfRightOrder = () => {
       equal = checkArrays(buttonPressedArray, buttonArray);
       if (equal === true) {
-        $input.innerHTML = "you did it!";
-        rocket.addFire();
-        //hide buttons
-        $buttons.forEach(button => button.classList.add("hide"));
+        //button combination is right
+        $audio.play();
+        $input.innerHTML = "ready to launch rocket";
+        //wait to launch untill countdown is complete
+        setTimeout(launchRocket, 10000);
+
+        $countdown.innerHTML = countdownCounter;
+        setInterval(countdown, 1000);
+
         $text.classList.add("hide");
+        $buttons.forEach(button => button.classList.add("hide"));
       } else {
         if (buttonPressedArray.length < buttonArray.length) {
+          //if they haven't pressed enough buttons
           $input.innerHTML = "keep going";
           console.log("keep going");
         } else {
+          //if the combination isn't right
           console.log("try again");
           $input.innerHTML = "try again";
           buttonPressedArray = [];
         }
         console.log(buttonPressedArray);
         // console.log("try again/keep going");
+      }
+    };
+
+    const launchRocket = () => {
+      readyforLaunch = true;
+      rocket.addFire();
+      $input.classList.add("hide");
+    };
+
+    const countdown = () => {
+      if (countdownCounter > 0) {
+        $countdown.classList.remove("hide");
+        countdownCounter = countdownCounter - 1;
+        $countdown.innerHTML = countdownCounter;
+      } else {
+        $countdown.classList.add("hide");
+        clearInterval(countdown);
       }
     };
 
@@ -214,7 +242,8 @@ import Sky from "./classes/Sky.js";
 
     const render = () => {
       rocket.animate();
-      if (equal === true) {
+      // change to timer
+      if (readyforLaunch === true) {
         rocket.mesh.position.y += 0.1;
         rocket.animate();
       }
