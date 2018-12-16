@@ -27,7 +27,10 @@ import Sky from "./classes/Sky.js";
     detectionSphere,
     radius,
     centerpointx,
-    centerpointz;
+    centerpointz,
+    direction,
+    roundTempPosX = 0,
+    roundTempPosZ = 6;
 
   let collidableMeshList = [];
   let buttonPressedArray = [];
@@ -41,15 +44,16 @@ import Sky from "./classes/Sky.js";
   const $buttons = document.querySelectorAll("button");
   const $text = document.querySelector(".text");
   const $input = document.querySelector(".input");
+  const $buttoncontainer = document.querySelector(".buttons");
   const $audio = document.querySelector("audio");
-  const $countdown = document.querySelector('.countdown');
+  const $countdown = document.querySelector(".countdown");
 
   const init = () => {
     video.width = 600;
     video.height = 600;
 
-    launch();
-    //space();
+    // launch();
+    space();
 
     container.appendChild(renderer.domElement);
     window.addEventListener("resize", onWindowResize, false);
@@ -202,11 +206,8 @@ import Sky from "./classes/Sky.js";
         $countdown.innerHTML = countdownCounter;
         setInterval(countdown, 1000);
 
-        $text.classList.add('hide');
-        $buttons.forEach(button =>
-          button.classList.add('hide')
-        );
-
+        $text.classList.add("hide");
+        $buttons.forEach(button => button.classList.add("hide"));
       } else {
         if (buttonPressedArray.length < buttonArray.length) {
           //if they haven't pressed enough buttons
@@ -226,8 +227,8 @@ import Sky from "./classes/Sky.js";
     const launchRocket = () => {
       readyforLaunch = true;
       rocket.addFire();
-      $input.classList.add('hide');
-    }
+      $input.classList.add("hide");
+    };
 
     const countdown = () => {
       if (countdownCounter > 1) {
@@ -235,10 +236,10 @@ import Sky from "./classes/Sky.js";
         countdownCounter = countdownCounter -1;
         $countdown.innerHTML = countdownCounter;
       } else {
-        $countdown.classList.add('hide');
+        $countdown.classList.add("hide");
         clearInterval(countdown);
       }
-    }
+    };
 
     const checkArrays = (a, b) => {
       if (a.length === b.length) {
@@ -282,6 +283,7 @@ import Sky from "./classes/Sky.js";
 
   const space = () => {
     const spaceInit = () => {
+      $buttoncontainer.innerHTML = "";
       getPosenet();
       createScene();
       createCamera();
@@ -303,49 +305,13 @@ import Sky from "./classes/Sky.js";
     const setCoordinates = async () => {
       const pose = await net.estimateSinglePose(video, 0.5, true, 16);
       requestAnimationFrame(setCoordinates);
-      // if (pose.keypoints[0].position.x < 200) {
-      //   camera.position.set(
-      //     Math.cos(Date.now() * 0.03) * 4,
-      //     -30,
-      //     Math.sin(Date.now() * 0.03) * 4 - 790
-      //   );
-
-      //   console.log("cam", camera.position);
-      // } else if (pose.keypoints[0].position.x > 400) {
-      //   console.log("rechts");
-      // } else {
-      //   console.log("middden");
-      // }
-
-      posePoints = pose;
-
-      satelite.mesh.position.x = mapValue(
-        pose.keypoints[0].position.x,
-        0,
-        600,
-        camera.position.x - 3,
-        camera.position.x + 3
-      );
-
-      satelite.mesh.position.y = mapValue(
-        pose.keypoints[0].position.y,
-        0,
-        600,
-        camera.position.y + 2,
-        camera.position.y - 2
-      );
-      detectionSphere.position.set(
-        satelite.mesh.position.x,
-        satelite.mesh.position.y + 0.3,
-        satelite.mesh.position.z
-      );
-      detectionSphere.rotation.set(
-        satelite.mesh.rotation.x,
-        satelite.mesh.rotation.y,
-        satelite.mesh.rotation.z
-      );
-
-      satelite.mesh.position.z = camera.position.z - 2;
+      if (pose.keypoints[0].position.x < 200) {
+        direction = "links";
+      } else if (pose.keypoints[0].position.x > 400) {
+        direction = "rechts";
+      } else {
+        direction = "midden";
+      }
     };
 
     const mapValue = (value, istart, istop, ostart, ostop) =>
@@ -525,19 +491,42 @@ import Sky from "./classes/Sky.js";
     const render = () => {
       satelite.moveSatellite();
 
-      camera.position.set(
-        satelite.mesh.position.x,
-        satelite.mesh.position.y,
-        satelite.mesh.position.z + 10
-      );
+      switch (direction) {
+        case "links":
+          roundTempPosX = Math.cos(Date.now() * 0.0003) * 6;
+          roundTempPosZ = Math.sin(Date.now() * 0.0003) * 6;
+          camera.position.set(
+            satelite.mesh.position.x + roundTempPosX,
+            -30,
+            satelite.mesh.position.z + roundTempPosZ
+          );
+          break;
+        case "rechts":
+          roundTempPosX = Math.cos(Date.now() * -0.0003) * 6;
+          roundTempPosZ = Math.sin(Date.now() * -0.0003) * 6;
 
-      // camera.lookAt(
-      //   new THREE.Vector3(
-      //     detectionSphere.position.x,
-      //     detectionSphere.position.y,
-      //     detectionSphere.position.z
-      //   )
-      // );
+          camera.position.set(
+            satelite.mesh.position.x + roundTempPosX,
+            -30,
+            satelite.mesh.position.z + roundTempPosZ
+          );
+          break;
+        case "midden":
+          camera.position.set(
+            satelite.mesh.position.x + roundTempPosX,
+            satelite.mesh.position.y,
+            satelite.mesh.position.z + roundTempPosZ
+          );
+          break;
+      }
+
+      camera.lookAt(
+        new THREE.Vector3(
+          satelite.mesh.position.x,
+          satelite.mesh.position.y,
+          satelite.mesh.position.z
+        )
+      );
 
       galaxy.animate();
 
