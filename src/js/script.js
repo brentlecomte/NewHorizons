@@ -32,13 +32,15 @@ import Sky from "./classes/Sky.js";
   const container = document.querySelector(".world");
   const buttonArray = ["5", "3", "1", "2", "4"];
   const $buttons = document.querySelectorAll("button");
+  const $text = document.querySelector(".text");
+  const $input = document.querySelector(".input");
 
   const init = () => {
     video.width = 600;
     video.height = 600;
 
-    // launch();
-    space();
+    launch();
+    //space();
 
     container.appendChild(renderer.domElement);
     window.addEventListener("resize", onWindowResize, false);
@@ -167,9 +169,24 @@ import Sky from "./classes/Sky.js";
     const checkIfRightOrder = () => {
       equal = checkArrays(buttonPressedArray, buttonArray);
       if (equal === true) {
+        $input.innerHTML = "you did it!";
         rocket.addFire();
+        //hide buttons
+        $buttons.forEach(button =>
+          button.classList.add('hide')
+        );
+        $text.classList.add('hide');
       } else {
-        console.log("try again/keep going");
+        if (buttonPressedArray.length < buttonArray.length) {
+          $input.innerHTML = "keep going";
+          console.log("keep going");
+        } else {
+          console.log("try again");
+          $input.innerHTML = "try again";
+          buttonPressedArray = [];
+        }
+        console.log(buttonPressedArray);
+        // console.log("try again/keep going");
       }
     };
 

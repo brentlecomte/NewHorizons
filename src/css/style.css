@@ -20,6 +20,44 @@ html {
   display: none;
 }
 
+.hide {
+  display: none;
+}
+
 .world {
   box-sizing: border-box;
+  display: block;
+  position: absolute;
+}
+
+.buttons {
+  display: flex;
+  position: absolute;
+  width: 100vw;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+  bottom: 0;
+  height: 12rem;
+}
+
+.button-div {
+  width: 30rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.text {
+  color: blue;
+  text-transform: uppercase;
+  font-family: helvetica;
+}
+
+.buttons button {
+  background-color: blue;
+  border: none;
+  width: 5rem;
+  height: 7rem;
+  color: white;
+  font-size: 3rem;
 }
