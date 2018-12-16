@@ -22,11 +22,15 @@ import Sky from "./classes/Sky.js";
     rocket,
     engineFire,
     sky,
-    detectionSphere;
+    detectionSphere,
+    radius,
+    centerpointx,
+    centerpointz;
 
   let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
+  let jupiterPassed = false;
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -368,31 +372,59 @@ import Sky from "./classes/Sky.js";
     const loop = () => {
       requestAnimationFrame(loop);
 
-      // console.log("earth", galaxy.earth.mesh.position);
-      // console.log("jupiter", galaxy.jupiter.mesh.position);
-      let radius =
-        Math.sqrt(
-          Math.pow(
-            galaxy.jupiter.mesh.position.x - galaxy.earth.mesh.position.x,
-            2
-          ) +
+      if (jupiterPassed === false) {
+        radius =
+          Math.sqrt(
             Math.pow(
-              galaxy.jupiter.mesh.position.z - galaxy.earth.mesh.position.z,
+              galaxy.jupiter.mesh.position.x - galaxy.earth.mesh.position.x,
               2
-            )
-        ) / 2;
+            ) +
+              Math.pow(
+                galaxy.jupiter.mesh.position.z - galaxy.earth.mesh.position.z,
+                2
+              )
+          ) / 2;
 
-      let centerpointx =
-        (galaxy.earth.mesh.position.x + galaxy.jupiter.mesh.position.x) / 2;
-      let centerpointz =
-        (galaxy.earth.mesh.position.z + galaxy.jupiter.mesh.position.z) / 2;
+        centerpointx =
+          (galaxy.earth.mesh.position.x + galaxy.jupiter.mesh.position.x) / 2;
+        centerpointz =
+          (galaxy.earth.mesh.position.z + galaxy.jupiter.mesh.position.z) / 2;
 
-      console.log(radius);
+        if (
+          Math.floor(satelite.mesh.position.x - 10) <
+            Math.floor(galaxy.jupiter.mesh.position.x + 5) &&
+          Math.floor(satelite.mesh.position.x - 10) >
+            Math.floor(galaxy.jupiter.mesh.position.x - 5) &&
+          Math.floor(satelite.mesh.position.z + 800) <
+            Math.floor(galaxy.jupiter.mesh.position.z + 5) &&
+          Math.floor(satelite.mesh.position.z + 800) >
+            Math.floor(galaxy.jupiter.mesh.position.z - 5)
+        ) {
+          jupiterPassed = true;
+        }
+      } else {
+        radius =
+          Math.sqrt(
+            Math.pow(
+              galaxy.pluto.mesh.position.x - galaxy.jupiter.mesh.position.x,
+              2
+            ) +
+              Math.pow(
+                galaxy.pluto.mesh.position.z - galaxy.jupiter.mesh.position.z,
+                2
+              )
+          ) / 2;
+
+        centerpointx =
+          (galaxy.jupiter.mesh.position.x + galaxy.pluto.mesh.position.x) / 2;
+        centerpointz =
+          (galaxy.jupiter.mesh.position.z + galaxy.pluto.mesh.position.z) / 2;
+      }
 
       let speed = Date.now() * -0.0001;
 
       satelite.mesh.position.set(
-        Math.cos(speed) * radius + centerpointx,
+        Math.cos(speed) * radius + centerpointx + 10,
         -30,
         Math.sin(speed) * radius + centerpointz - 800
       );
@@ -432,7 +464,7 @@ import Sky from "./classes/Sky.js";
       camera.position.set(
         satelite.mesh.position.x,
         satelite.mesh.position.y,
-        satelite.mesh.position.z + 2
+        satelite.mesh.position.z + 10
       );
 
       // camera.lookAt(
