@@ -38,7 +38,7 @@
     "webpack-dev-server": "^3.1.9"
   },
   "scripts": {
-    "dev": "webpack-dev-server --mode development",
+    "dev": "webpack-dev-server --mode development --open",
     "prod": "rm -rf dist/ && ditto src/assets dist/assets && webpack --mode production",
     "start": "node server.js"
   },

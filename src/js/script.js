@@ -30,14 +30,17 @@ import Sky from "./classes/Sky.js";
     centerpointz,
     direction,
     roundTempPosX = 0,
-    roundTempPosZ = 6;
+    roundTempPosZ = 6,
+    distance;
 
   let collidableMeshList = [];
   let buttonPressedArray = [];
   let equal = false;
   let readyforLaunch = false;
   let countdownCounter = 10,
-    jupiterPassed = false;
+    jupiterPassed = false,
+    change = false,
+    checkChange = "hallo";
 
   const video = document.querySelector(".video");
   const container = document.querySelector(".world");
@@ -52,11 +55,22 @@ import Sky from "./classes/Sky.js";
   const init = () => {
     video.width = 600;
     video.height = 600;
-
+    // launch();
     space();
-
     container.appendChild(renderer.domElement);
+    // window.setInterval(checkState, 1000);
+
     window.addEventListener("resize", onWindowResize, false);
+  };
+
+  const checkState = () => {
+    if (change === false && checkChange === "hallo") {
+      checkChange = "yeet";
+      renderer.render(scene, camera);
+    } else if (checkChange === "space") {
+      scene = null;
+      renderer.render(scene, camera);
+    }
   };
 
   const onWindowResize = () => {
@@ -259,6 +273,11 @@ import Sky from "./classes/Sky.js";
 
     const render = () => {
       rocket.animate();
+      if (rocket.mesh.position.y > 35) {
+        change = true;
+        checkChange = "space";
+        cancelAnimationFrame(loop);
+      }
       // change to timer
       if (readyforLaunch === true) {
         rocket.mesh.position.y += 0.1;
@@ -283,7 +302,6 @@ import Sky from "./classes/Sky.js";
 
   const space = () => {
     const spaceInit = () => {
-      $buttoncontainer.innerHTML = "";
       getPosenet();
       createScene();
       createCamera();
@@ -313,9 +331,6 @@ import Sky from "./classes/Sky.js";
         direction = "midden";
       }
     };
-
-    const mapValue = (value, istart, istop, ostart, ostop) =>
-      ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 
     const addCamera = () => {
       if (navigator.mediaDevices.getUserMedia) {
@@ -399,6 +414,9 @@ import Sky from "./classes/Sky.js";
       );
     };
 
+    const mapValue = (value, istart, istop, ostart, ostop) =>
+      ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+
     const loop = () => {
       requestAnimationFrame(loop);
 
@@ -451,39 +469,42 @@ import Sky from "./classes/Sky.js";
           (galaxy.jupiter.mesh.position.z + galaxy.pluto.mesh.position.z) / 2;
       }
 
-      let speed = Date.now() * -0.0001;
-
-      satelite.mesh.position.set(
-        Math.cos(speed) * radius + centerpointx + 10,
-        -30,
-        Math.sin(speed) * radius + centerpointz - 800
+      distance = mapValue(
+        Math.sqrt(
+          Math.pow(galaxy.pluto.mesh.position.x - satelite.mesh.position.x, 2) +
+            Math.pow(galaxy.pluto.mesh.position.z - satelite.mesh.position.z, 2)
+        ),
+        3270,
+        0,
+        75000000000,
+        0
       );
 
-      // for (
-      //   let vertexIndex = 0;
-      //   vertexIndex < detectionSphere.geometry.vertices.length;
-      //   vertexIndex++
-      // ) {
-      //   const localVertex = detectionSphere.geometry.vertices[
-      //     vertexIndex
-      //   ].clone();
-      //   const globalVertex = detectionSphere.matrix.applyMatrix4(localVertex);
-      //   const directionVector = globalVertex.sub(detectionSphere.position);
+      let speed = Date.now() * -0.0001;
 
-      //   const ray = new THREE.Raycaster(
-      //     detectionSphere.position,
-      //     directionVector.clone().normalize()
-      //   );
-      //   const collisionResults = ray.intersectObjects(collidableMeshList);
-      //   console.log(collisionResults);
+      if (distance < 1000) {
+        console.log("small");
 
-      //   if (
-      //     collisionResults.length > 0 &&
-      //     collisionResults[0].distance < directionVector.length()
-      //   ) {
-      //     console.log("collision");
-      //   }
-      // }
+        speed = Date.now() * -0.000001;
+        $buttoncontainer.innerHTML =
+          "<h2>New Horizons is reaching the end of its mission</h2><p>New Horzions completed it goals of getting more info of pluto, now it will be used to gather more info about what lays behind pluto...</p><p class=text>Distance to pluto: " +
+          distance +
+          " km</p>";
+      }
+
+      if (jupiterPassed === false) {
+        satelite.mesh.position.set(
+          Math.cos(speed) * radius + centerpointx + 10,
+          -30,
+          Math.sin(speed) * radius + centerpointz - 800
+        );
+      } else {
+        satelite.mesh.position.set(
+          Math.cos(speed) * radius + centerpointx + 10,
+          -30,
+          Math.sin(speed) * radius + centerpointz
+        );
+      }
 
       render();
     };
@@ -528,6 +549,8 @@ import Sky from "./classes/Sky.js";
         )
       );
 
+      $buttoncontainer.innerHTML =
+        "<p class=text>Distance to pluto: " + Math.floor(distance) + " km</p>";
       galaxy.animate();
 
       renderer.render(scene, camera);
